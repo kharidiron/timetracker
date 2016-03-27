@@ -1,0 +1,36 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row row-list">
+            <div class="col-xs-1">
+              <button type="submit" class="btn btn-xs" id="prev_year"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            </div>
+            <div class="col-xs-10">
+              <p class="text-center"><strong>{{ year }}</strong></p>
+            </div>
+            <div class="col-xs-1">
+              <button type="submit" class="btn btn-xs pull-right" id="next_year"><span class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
+          </div>
+        </div>
+
+        <ul class="list-group">
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Jan">January</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Feb">February</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Mar">March</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Apr">April</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/May">May</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Jun">June</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Jul">July</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Aug">August</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Sep">September</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Oct">October</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Nov">November</a></li>
+          <li class="list-group-item"><a href="/tracker/{{ year }}/Dec">December</a></li>
+        </ul>
+      </div>
+
+{% endblock content %}

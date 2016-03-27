@@ -1,0 +1,58 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row row-list">
+            <div class="col-xs-1">
+              <button type="submit" class="btn btn-xs" id="prev_month"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            </div>
+            <div class="col-xs-10">
+              <p class="text-center"><strong>{{ month }} <a href="/tracker/{{ year }}">{{ year }}</a> </strong></p>
+            </div>
+            <div class="col-xs-1">
+              <button type="submit" class="btn btn-xs pull-right" id="next_month"><span class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead class="">
+            <tr>
+            {% for day in daysofweek %}
+              <th  class="text-center">{{ day }}</th>
+            {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for week in days %}
+            <tr>
+            {% for day in week %}
+              {% if day != 0 %}
+                {% ifequal year|stringformat:"s" today.0 %}
+                {% ifequal month today.1 %}
+                {% ifequal day|stringformat:"s" today.2 %}
+              <td class="text-center info">
+                {% else %}
+              <td class="text-center">
+                {% endifequal %}
+                {% else %}
+              <td class="text-center">
+                {% endifequal %}
+                {% else %}
+              <td class="text-center">
+                {% endifequal %}
+                <a href="/tracker/{{ year }}/{{ month }}/{{ day }}">{{ day }}</a>
+              </td>
+              {% else %}
+              <td class="text-center"></td>
+              {% endif %}
+            {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+{% endblock content %}

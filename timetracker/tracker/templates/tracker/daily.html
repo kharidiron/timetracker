@@ -1,0 +1,84 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+      <div class="row">
+        <div class="col-xs-1">
+          <button type="submit" class="btn btn-xs" id="prev_day"><span class="glyphicon glyphicon-chevron-left"></span></button>
+        </div>
+        <div class="col-xs-10">
+          <p class="text-center"><strong><a href="/tracker/{{ year }}/{{ month }}">{{ month }} {{ day }}</a>, <a href="/tracker/{{ year }}">{{ year }}</a> </strong></p>
+        </div>
+        <div class="col-xs-1">
+          <button type="submit" class="btn btn-xs pull-right" id="next_day"><span class="glyphicon glyphicon-chevron-right"></span></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-2">
+          <label for="starttime">Start Time</label>
+        </div>
+        <div class="col-xs-2">
+          <label for="stoptime">Stop Time</label>
+        </div>
+        <div class="col-xs-6">
+          <label for="task">Task</label>
+        </div>
+        <div class="col-xs-1">
+        </div>
+      </div>
+
+      <div class="row">
+        <form class="form-inline" method="POST">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <div class="input-group bootstrap-timepicker timepicker col-xs-2 fieldWrapper">
+            {{ form.start.errors }}
+            {{ form.start }}
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>
+          <div class="input-group bootstrap-timepicker timepicker col-xs-2 fieldWrapper">
+            {{ form.stop.errors }}
+            {{ form.stop }}
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>
+          <div class="input-group col-xs-6 fieldWrapper">
+            {{ form.task.errors }}
+            {{ form.task }}
+          </div>
+          <div class="input-group col-xs-1">
+            <button type="submit" name="add" class="btn btn-primary pull-right" value="Add">Add</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="row">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="col-xs-2"></th>
+              <th class="col-xs-2"></th>
+              <th class="col-xs-6"></th>
+              <th class="col-xs-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in records %}
+            <tr>
+              <td>{{ record.start|date:'H:i' }}</td>
+              <td>{{ record.stop|date:'H:i' }}</td>
+              <td>{{ record.task }}</td>
+              <td>
+                <form method="POST">{% csrf_token %}
+                  <button type="submit" name="delete" id="delete" value="{{ record.id }}" class="btn btn-xs btn-danger pull-right">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                  </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+{% endblock content %}

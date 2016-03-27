@@ -1,0 +1,85 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+      <div class="row">
+        <div class="col-xs-1">
+          <button type="submit" class="btn btn-xs" id="prev_day"><span class="glyphicon glyphicon-chevron-left"></span></button>
+        </div>
+        <div class="col-xs-10">
+          <p class="text-center"><strong>{{ month }} {{ day }}, {{ year }}</strong></p>
+        </div>
+        <div class="col-xs-1">
+          <button type="submit" class="btn btn-xs pull-right" id="next_day"><span class="glyphicon glyphicon-chevron-right"></span></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-2">
+          <label for="starttime">Start Time</label>
+        </div>
+        <div class="col-xs-2">
+          <label for="stoptime">Stop Time</label>
+        </div>
+        <div class="col-xs-6">
+          <label for="task">Task</label>
+        </div>
+        <div class="col-xs-1">
+        </div>
+      </div>
+
+      <div class="row">
+        <form class="form-inline" action="{{ action }}" method="POST">
+          {% csrf_token %}
+          <div class="input-group bootstrap-timepicker timepicker col-xs-2">
+            <input name="start" type="text" class="form-control input-small">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>
+
+          <div class="input-group bootstrap-timepicker timepicker col-xs-2">
+            <input name="stop" type="text" class="form-control input-small">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>
+
+          <div class="input-group col-xs-6">
+            <input name="task" type="text" class="form-control">
+          </div>
+
+          <div class="input-group col-xs-1">
+            <button type="submit" class="btn btn-primary pull-right" value="Save">Add</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="row">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="col-xs-2"></th>
+              <th class="col-xs-2"></th>
+              <th class="col-xs-6"></th>
+              <th class="col-xs-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- LOOP TEMPLATE
+            <tr>
+              <td>stuff</td>
+              <td>stuff</td>
+              <td>stuff</td>
+              <td><button type="submit" class="btn btn-xs btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span></button></td>
+            </tr>
+            -->
+            <tr>
+              <td>START TIME</td>
+              <td>STOP TIME</td>
+              <td>TASK DONE</td>
+              <td><button type="submit" class="btn btn-xs btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span></button></td>
+            </tr>
+            <!-- LOOP HERE -->
+          </tbody>
+        </table>
+      </div>
+
+{% endblock content %}
