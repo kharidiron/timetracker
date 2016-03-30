@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head >
+  <meta charset="UTF-8" >
+  <title ></title >
+</head >
+<body >
+  <div>
+    {{ user }}
+    {% if user.is_anonymous %}
+    <a href="{% url 'login' %}">login</a>
+    {% else %}
+    <a href="{% url 'logout' %}">logout</a>
+    {% endif %}
+  </div>
+
+  {% block content %}
+  {% endblock content %}
+
+</body >
+</html >

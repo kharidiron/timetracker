@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Year view {{ year }} {{ month }}
+
+       <table class="table">
+          <thead class="">
+            <tr>
+            {% for monthname in months %}
+              {% ifequal monthname.1 month %}
+              <th  class="text-center info">{{ monthname.0 }}</th>
+              {% else %}
+              <th  class="text-center">{{ monthname.0 }}</th>
+              {% endifequal %}
+            {% endfor %}
+            </tr>
+          </thead>
+        </table>
+
+        <table class="table">
+          <thead class="">
+            <tr>
+            {% for day in daynames %}
+              <th  class="text-center">{{ day }}</th>
+            {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for week in days %}
+            <tr>
+            {% for day in week %}
+              {% if day != 0 %}
+                {% ifequal year|stringformat:"s" today.0 %}
+                {% ifequal month today.1 %}
+                {% ifequal day|stringformat:"s" today.2 %}
+              <td class="text-center info">
+                {% else %}
+              <td class="text-center">
+                {% endifequal %}
+                {% else %}
+              <td class="text-center">
+                {% endifequal %}
+                {% else %}
+              <td class="text-center">
+                {% endifequal %}
+                <a href="/tracker/{{ year }}/{{ month }}/{{ day }}">{{ day }}</a>
+              </td>
+              {% else %}
+              <td class="text-center"></td>
+              {% endif %}
+            {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+
+{% endblock %}
