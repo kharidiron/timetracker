@@ -1,2 +1,0 @@
-source ${HOME}/.bashrc
-source ${HOME}/Workspace/PyCharmVEnvs/nics_timetracker/bin/activate
