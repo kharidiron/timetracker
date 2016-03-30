@@ -2,58 +2,64 @@
 
 {% block content %}
 
-Year view {{ year }} {{ month }}
-
-       <table class="table">
-          <thead class="">
-            <tr>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <button><a href="{% url 'myapp:year' prev_year %}">{{ prev_year }}</a></button>
+        <ul class="nav nav-pills">
             {% for monthname in months %}
-              {% ifequal monthname.1 month %}
-              <th  class="text-center info">{{ monthname.0 }}</th>
-              {% else %}
-              <th  class="text-center">{{ monthname.0 }}</th>
-              {% endifequal %}
+            {% ifequal monthname.1 month %}
+            <li role="presentation" class="active"><a href="{% url 'myapp:month' year monthname.1 %}">{{ monthname.0 }}</a></li>
+            {% else %}
+            <li role="presentation"><a href="{% url 'myapp:month' year monthname.1 %}">{{ monthname.0 }}</a></li>
+            {% endifequal %}
             {% endfor %}
-            </tr>
-          </thead>
-        </table>
+        </ul>
+        <button><a href="{% url 'myapp:year' next_year %}">{{ next_year }}</a></button>
+    </div>
+</div>
 
-        <table class="table">
-          <thead class="">
-            <tr>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <button><a href="{% url 'myapp:yearmonth' prev_month %}">{{ prev_month }}</a></button>
+        <h2 class="panel-title text-center">{{ month }} {{ year }}</h2>
+        <button><a href="{% url 'myapp:yearmonth' next_month %}">{{ next_month }}</a></button>
+    </div>
+    <table class="table">
+        <thead class="">
+        <tr>
             {% for day in daynames %}
-              <th  class="text-center">{{ day }}</th>
+            <th class="text-center">{{ day }}</th>
             {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for week in days %}
-            <tr>
+        </tr>
+        </thead>
+        <tbody>
+        {% for week in days %}
+        <tr>
             {% for day in week %}
-              {% if day != 0 %}
-                {% ifequal year|stringformat:"s" today.0 %}
-                {% ifequal month today.1 %}
-                {% ifequal day|stringformat:"s" today.2 %}
-              <td class="text-center info">
+            {% if day != 0 %}
+            {% ifequal year|stringformat:"s" today.0 %}
+            {% ifequal month today.1 %}
+            {% ifequal day|stringformat:"s" today.2 %}
+            <td class="text-center info">
                 {% else %}
-              <td class="text-center">
+            <td class="text-center">
                 {% endifequal %}
                 {% else %}
-              <td class="text-center">
+            <td class="text-center">
                 {% endifequal %}
                 {% else %}
-              <td class="text-center">
+            <td class="text-center">
                 {% endifequal %}
-                <a href="/tracker/{{ year }}/{{ month }}/{{ day }}">{{ day }}</a>
-              </td>
-              {% else %}
-              <td class="text-center"></td>
-              {% endif %}
+                <a href="{% url 'myapp:month' year month %}{{ day }}">{{ day }}</a>
+            </td>
+            {% else %}
+            <td class="text-center"></td>
+            {% endif %}
             {% endfor %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

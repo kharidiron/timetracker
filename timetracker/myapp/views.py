@@ -5,7 +5,8 @@ from .models import Entry
 
 import datetime
 import calendar
-
+from dateutil.parser import parse
+from dateutil.relativedelta import relativedelta as delta
 
 calendar.setfirstweekday(calendar.MONDAY)
 
@@ -24,14 +25,14 @@ def _months(arg=None):
             if len(arg) == 3:
                 try:
                     idx = [i for i, v in enumerate(months) if v[1] == arg][0]
-                except:
+                except IndexError:
                     return None
             else:
                 try:
                     idx = [i for i, v in enumerate(months) if v[0] == arg][0]
-                except:
+                except IndexError:
                     return None
-            return idx
+        return idx
     return months
 
 
@@ -52,15 +53,6 @@ class RestrictedView(LoginRequiredMixin, base.TemplateView):
         return context
 
 
-class YearView(base.TemplateView):
-    template_name = 'year.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(YearView, self).get_context_data(**kwargs)
-        context['today'] = datetime.date.today()
-        return context
-
-
 class MonthView(base.TemplateView):
     template_name = 'month.html'
 
@@ -72,4 +64,13 @@ class MonthView(base.TemplateView):
         context['daynames'] = calendar.weekheader(2).split(" ")
         context['days'] = calendar.monthcalendar(int(context['year']),
                                                  _months(context['month']))
+        context['prev_year'] = int(context['year']) - 1
+        context['next_year'] = int(context['year']) + 1
+
+        view_date = '-'.join([context['year'], context['month']])
+        prev_month = (parse(view_date) + delta(months=-1)).strftime('%Y/%b')
+        next_month = (parse(view_date) + delta(months=+1)).strftime('%Y/%b')
+        print(prev_month, next_month)
+        context['prev_month'] = prev_month
+        context['next_month'] = next_month
         return context
