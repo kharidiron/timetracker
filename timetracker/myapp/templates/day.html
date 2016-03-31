@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Well this is shit.
+
+<form method="POST" >
+  {% csrf_token %}
+
+  {{ form.as_ul }}
+
+
+  <button type="submit" class="btn btn-xs btn-danger pull-right" >
+    <span class="glyphicon glyphicon-remove" ></span >
+  </button >
+</form >
+
+
+<div class="row" >
+  <table class="table table-striped" >
+    <thead >
+    <tr >
+      <th class="col-xs-2" ></th >
+      <th class="col-xs-2" ></th >
+      <th class="col-xs-6" ></th >
+      <th class="col-xs-1" ></th >
+    </tr >
+    </thead >
+
+    <tbody >
+    {% for entry in object_list %}
+    <tr >
+      <td >{{ entry.start|date:'H:i' }} - {{ entry.stop|date:'H:i' }}</td >
+      <td >{{ entry.task }}</td >
+      <td >
+        <form method="POST" >{% csrf_token %}
+          <button type="submit" name="delete" id="delete" value="{{ entry.id }}"
+                  class="btn btn-xs btn-danger pull-right" >
+            <span class="glyphicon glyphicon-remove" ></span >
+          </button >
+        </form >
+      </td >
+    </tr >
+    {% endfor %}
+    </tbody >
+  </table >
+</div >
+
+
+{% endblock %}

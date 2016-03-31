@@ -1,6 +1,8 @@
-from django.views.generic import base
+from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 
+from .forms import TaskEntryForm
 from .models import Entry
 
 import datetime
@@ -36,7 +38,7 @@ def _months(arg=None):
     return months
 
 
-class IndexView(base.TemplateView):
+class IndexView(generic.base.TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -44,7 +46,7 @@ class IndexView(base.TemplateView):
         return context
 
 
-class RestrictedView(LoginRequiredMixin, base.TemplateView):
+class RestrictedView(LoginRequiredMixin, generic.base.TemplateView):
     template_name = 'restricted.html'
 
     def get_context_data(self, **kwargs):
@@ -53,7 +55,7 @@ class RestrictedView(LoginRequiredMixin, base.TemplateView):
         return context
 
 
-class MonthView(base.TemplateView):
+class MonthView(generic.base.TemplateView):
     template_name = 'month.html'
 
     def get_context_data(self, **kwargs):
@@ -70,7 +72,33 @@ class MonthView(base.TemplateView):
         view_date = '-'.join([context['year'], context['month']])
         prev_month = (parse(view_date) + delta(months=-1)).strftime('%Y/%b')
         next_month = (parse(view_date) + delta(months=+1)).strftime('%Y/%b')
-        print(prev_month, next_month)
         context['prev_month'] = prev_month
         context['next_month'] = next_month
         return context
+
+
+class DayView(generic.list.ListView):
+    model = Entry
+    context_object_name = 'entries'
+    template_name = 'day.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DayView, self).get_context_data(**kwargs)
+        context['form'] = TaskEntryForm
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = TaskEntryForm(request.POST)
+        self.object_list = self.get_queryset()
+
+        if form.is_valid():
+            context = super(DayView, self).get_context_data(**kwargs)
+            context['form'] = TaskEntryForm
+            save_it = form.save(commit = False)
+            save_it.user = self.request.user
+            save_it.save()
+            return redirect(request.META['HTTP_REFERER'])
+        else:
+            context = super(DayView, self).get_context_data(**kwargs)
+            context['form'] = form
+            return self.render_to_response(context=context)
