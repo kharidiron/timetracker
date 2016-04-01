@@ -20,9 +20,9 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <button><a href="{% url 'myapp:yearmonth' prev_month %}">{{ prev_month }}</a></button>
+        <button><a href="{% url 'myapp:month' prev_month.0 prev_month.1 %}">{{ prev_month_s }}</a></button>
         <h2 class="panel-title text-center">{{ month }} {{ year }}</h2>
-        <button><a href="{% url 'myapp:yearmonth' next_month %}">{{ next_month }}</a></button>
+        <button><a href="{% url 'myapp:month' next_month.0 next_month.1 %}">{{ next_month_s }}</a></button>
     </div>
     <table class="table">
         <thead class="">

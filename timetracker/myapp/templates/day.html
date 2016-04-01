@@ -2,7 +2,12 @@
 
 {% block content %}
 
-Well this is shit.
+<div class="panel panel-default">
+    <div class="panel-body">
+        <button><a href="{% url 'myapp:day' prev_day.0 prev_day.1 prev_day.2 %}">{{ prev_day_s }}</a></button>
+        <button><a href="{% url 'myapp:day' next_day.0 next_day.1 next_day.2 %}">{{ next_day_s }}</a></button>
+    </div>
+</div>
 
 <form method="POST" >
   {% csrf_token %}
@@ -10,7 +15,7 @@ Well this is shit.
   {{ form.as_ul }}
 
 
-  <button type="submit" class="btn btn-xs btn-danger pull-right" >
+  <button type="submit" name="add" class="btn btn-xs btn-danger pull-right" >
     <span class="glyphicon glyphicon-remove" ></span >
   </button >
 </form >

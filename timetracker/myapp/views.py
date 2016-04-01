@@ -72,8 +72,10 @@ class MonthView(generic.base.TemplateView):
         view_date = '-'.join([context['year'], context['month']])
         prev_month = (parse(view_date) + delta(months=-1)).strftime('%Y/%b')
         next_month = (parse(view_date) + delta(months=+1)).strftime('%Y/%b')
-        context['prev_month'] = prev_month
-        context['next_month'] = next_month
+        context['prev_month'] = prev_month.split('/')
+        context['prev_month_s'] = prev_month
+        context['next_month'] = next_month.split('/')
+        context['next_month_s'] = next_month
         return context
 
 
@@ -81,24 +83,50 @@ class DayView(generic.list.ListView):
     model = Entry
     context_object_name = 'entries'
     template_name = 'day.html'
+    object_list = None
+    view_date = ''
+
+    def get_queryset(self):
+        queryset = super(DayView, self).get_queryset()
+        self.view_date = '-'.join([self.kwargs['year'],
+                                   str(_months(self.kwargs['month'])),
+                                   self.kwargs['day']])
+        return queryset.filter(date=self.view_date).order_by('start')
 
     def get_context_data(self, **kwargs):
         context = super(DayView, self).get_context_data(**kwargs)
         context['form'] = TaskEntryForm
+
+        prev_day = (parse(self.view_date) + delta(days=-1)).strftime('%Y/%b/%d')
+        next_day = (parse(self.view_date) + delta(days=+1)).strftime('%Y/%b/%d')
+        context['prev_day'] = prev_day.split('/')
+        context['prev_day_s'] = prev_day
+        context['next_day'] = next_day.split('/')
+        context['next_day_s'] = next_day
         return context
 
     def post(self, request, *args, **kwargs):
         form = TaskEntryForm(request.POST)
         self.object_list = self.get_queryset()
 
-        if form.is_valid():
-            context = super(DayView, self).get_context_data(**kwargs)
-            context['form'] = TaskEntryForm
-            save_it = form.save(commit = False)
-            save_it.user = self.request.user
-            save_it.save()
-            return redirect(request.META['HTTP_REFERER'])
+        if 'add' in request.POST:
+            if form.is_valid():
+                context = self.get_context_data(**kwargs)
+                context['form'] = TaskEntryForm
+                form_data = form.save(commit=False)
+                form_data.date = parse(self.view_date)
+                form_data.user = self.request.user
+                form_data.save()
+                return redirect(request.META['HTTP_REFERER'])
+            else:
+                context = self.get_context_data(**kwargs)
+                context['form'] = form
+        elif 'delete' in request.POST:
+            context = self.get_context_data(**kwargs)
+
+            entry_id = request.POST.get('delete')
+            query = Entry.objects.get(pk=entry_id).delete()
         else:
-            context = super(DayView, self).get_context_data(**kwargs)
-            context['form'] = form
-            return self.render_to_response(context=context)
+            context = self.get_context_data(**kwargs)
+
+        return self.render_to_response(context=context)
